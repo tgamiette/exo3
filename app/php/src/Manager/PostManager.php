@@ -11,7 +11,6 @@ class PostManager extends BaseManager
      */
     public function getAllPost():array
     {
-
         return [];
     }
 

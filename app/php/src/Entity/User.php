@@ -3,23 +3,23 @@
 namespace App\Entity;
 
 
-class User {
+class User extends BaseEntity {
   protected int $id;
   protected string $name;
   protected string $lastname;
+  protected string $email;
+  protected string $jwt;
+  protected string $password;
 
-  public function __construct(array $data = []) {
-    $this->hydrate($data);
+  public function __construct($arr) {
+    parent::__construct($arr);
   }
+//  public function __construct(array $data = []) {
+//    parent
+//    $this->hydrate($data);
+//  }
 
-  public function hydrate(array $data) {
-    foreach ($data as $attribut => $value) {
-      $method = 'set' . str_replace(' ', '', ucfirst(str_replace('_', ' ', $attribut)));
-      if (is_callable(array($this, $method))) {
-        $this->$method($value);
-      }
-    }
-  }
+
 
   public function getId(): int {
     return $this->id;

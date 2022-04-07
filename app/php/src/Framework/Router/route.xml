@@ -26,4 +26,7 @@
     <!--    <route p="api/post" controller="ApiController" action="Post" methode="get"/>-->
 
 
+    <!--    Administration-->
+    <route p="test" controller="TestController" action="index" params="id"/>
+
 </routes>

@@ -2,11 +2,9 @@
 
 namespace App\Controller;
 
-
-class BaseController {
+abstract class BaseController {
   private $templateFile = __DIR__ . "/../Views/template.php";
   private $viewDIR = __DIR__ . "/../Views/Frontend/";
-//  private HTTPResponse $HTTPResponse;
 
   public function __construct(string $action, $params = [], $method = 'get') {
 
@@ -20,7 +18,6 @@ class BaseController {
   }
 
   public function render(string $template, array $arguments = [], string $title = 'titre') {
-
     $view = $this->viewDIR . $template . '.php';
     var_dump($view);
     foreach ($arguments as $key => $value) {
@@ -34,9 +31,10 @@ class BaseController {
   }
 
 
-  public function renderJSON($content): void {
-//    $this->HTTPResponse->addHeader('Content-Type: application/json');
+  public function renderJSON($content) {
+//    $header= new HTTPResponse();
+//    $header->addHeader('Content-Type: application/json');
     echo json_encode($content);
-    exit;
+    echo json_encode($_COOKIE);
   }
 }

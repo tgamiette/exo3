@@ -3,64 +3,50 @@
 namespace App\Controller;
 
 
-use App\Controller\UserManager;
 use App\Entity\User;
+use App\Manager\UserManager;
 
 class ApiController extends BaseController {
 
   public function getUser($params) {
-    die();
-//    $id = (int)$params['id'];
-    $params['id'] = (int)$params['id'];
-//    $user = new User($params);
-    $postmanager = new UserManager();
-
-    if ($_GET['name'] && $_GET['lastname']) {
-      $postmanager->add($user);
-    }
+    $userManager = new UserManager();
+    $id = (int)$params['id'];
+    var_dump($id);
 
     if ($id === 0) {
-//      $posts = $postmanager->findAll();
+      $posts = $userManager->findAll();
     }
     else {
-//      $posts = $postmanager->findById($id);
+      $posts = $userManager->findById($id);
     }
     $this->renderJSON("test");
   }
 
   public function postUser($params) {
-
-    if (isset($_GET['name']) && isset($_GET['lastname'])) {
-      unset($_GET['id']);
-      $user = new User($_GET);
+    if (isset($_POST['name']) && isset($_POST['lastname'])) {
+      $user = new User($_POST);
       $userManager = new UserManager();
-
-      $userManager->add($user);
-      $this->renderJSON(["message" => 'ajoute réussi']);
-
-    }
-
-
-    $post = new User($_POST);
-    $id = (int)$params['id'];
-    $Postmanager = new PostManager();
-    $result = $Postmanager->add($post);
-    if ($result) {
-      $this->renderJSON("Mise a jour Ok");
+      $result = $userManager->add($user);
+      if ($result) {
+        $this->renderJSON(["message" => 'ajoute réussi','status'=>200]);
+      }
+      else {
+        throw new \HttpException("Problème lors de l'ajout de la requête");
+        $this->renderJSON(["message" => "Problème lors de l'ajout", "status" => 400]);
+      }
     }
     else {
-      $this->renderJSON("Mise a jour KOOOOOO");
+      $this->renderJSON(["message" => 'il manque des popriété', "status" => 400]);
     }
   }
-//
-//
-//  public function deletePost($params)
+
+//  public function deleteUser($params)
 //  {
 //    $id = (int)$params['id'];
-//    $Postmanager = new PostManager();
+//    $Usermanager = new UserManager();
 //    $commentmanager = new CommentManager();
-//    $result = $Postmanager->deleteById($id);
-//    $commentmanager->deleteByPostId($id);
+//    $result = $Usermanager->deleteById($id);
+//    $commentmanager->deleteByUserId($id);
 //    if ($result) {
 //      $this->renderJSON("Mise a jour Ok");
 //    } else {
@@ -69,7 +55,7 @@ class ApiController extends BaseController {
 //  }
 //
 //
-//  public function putPost($params)
+//  public function putUser($params)
 //  {
 //    parse_str(file_get_contents("php://input"), $_PUT);
 //    $id = (int)$params['id'];
@@ -77,10 +63,10 @@ class ApiController extends BaseController {
 //    if ($id == 0 || empty($_PUT['author']) || empty($_PUT['content']) || empty($_PUT['publishedAt']) || empty($_PUT['title'])) {
 //      $this->renderJSON("il manque l'id ou des paramètres");
 //    } else {
-//      $postmanager = new PostManager();
-//      $post = $postmanager->findById($id);
+//      $userManager = new UserManager();
+//      $user = $userManager->findById($id);
 //
-//      $result = $postmanager->update($post);
+//      $result = $userManager->update($user);
 //      if ($result) {
 //        $this->renderJSON("Mise a jour Ok");
 //      } else {

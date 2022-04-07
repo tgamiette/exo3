@@ -12,16 +12,10 @@ function App() {
     useEffect(() => {
             // console.log(user)
             const myHeaders = new Headers();
-            // myHeaders.append("Content-Type", "application/json");
-            // myHeaders.append("Access-Control-Request-Method", "POST");
-            // myHeaders.append("Authorization", "POST");
-            // myHeaders.append("Authorization", "Basic Og==");
+            myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+            myHeaders.append("Access-Control-Request-Method", "POST");
 
-            const raw = JSON.stringify({
-                "lastname": "tedjy",
-                "name": "test"
-            });
-
+            const raw = new URLSearchParams({'name': user.name, 'lastname': user.lastname});
             const requestOptions = {
                 method: 'POST',
                 headers: myHeaders,
@@ -29,15 +23,18 @@ function App() {
             };
 
             // @ts-ignore
+            fetch("http://localhost:1234/api/user/", requestOptions)
+                .then(response => response.json())
+                .then(result => {
+                    console.log(result)
+                    if (result.status === 200){
+                        console.log("good")
 
+                    }else {
+                        console.log("pas Good")
 
-            // fetch("http://localhost:1234/api")
-            fetch("http://localhost:1234/api/user/?name=iddddddd&lastname=idddddddddd",requestOptions)
-                .then(response => {
-                    console.log(response)
-                    return response.text()
+                    }
                 })
-                .then(result => console.log(result))
                 .catch(error => console.log('error', error));
         }
         , [user])
