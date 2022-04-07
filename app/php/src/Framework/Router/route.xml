@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<routes>
+    <route p="/" controller="PostController" action="Index"/>
+    <route p="post" controller="PostController" action="post" params="id"/>
+    <route p="test" controller="PostController" action="test" params=""/>
+    <route p="new-post" method="post" controller="PostController" action="NewPost" params="id"/>
+
+    <!--    Administration-->
+    <route p="admin" controller="AdminController" action="Post" params="id,gfgh"/>
+    <route p="user-list" controller="AdminController" action="AllUsers" params="id"/>
+    <route p="editauthor" controller="AdminController" action="EditUser" params="id"/>
+    <route p="delete-user" controller="AdminController" action="DeleteUser" params="id"/>
+    <route p="delete-article" controller="AdminController" action="Post" params="id"/>
+
+    <!--    Security-->
+    <route p="singin" controller="SecurityController" action="checkCnx"/>
+    <route p="logout" controller="SecurityController" action="logout"/>
+    <route p="signup" controller="SecurityController" action="inscription"/>
+    <route p="update-user" controller="SecurityController" action="Post" params="id"/>
+
+    <!--    Api-->
+    <route p="api/user" controller="ApiController" action="user"  params="id"/>
+<!--    <route p="api/comment" controller="ApiController" action="comment"  params="id"/>-->
+    <!--    <route p="api/post" controller="ApiController" action="deletePost" methode="post" params="id"/>-->
+    <!--    <route p="api/post" controller="ApiController" action="updatePost" methode="post" params="id"/>-->
+    <!--    <route p="api/post" controller="ApiController" action="Post" methode="get"/>-->
+
+
+</routes>
