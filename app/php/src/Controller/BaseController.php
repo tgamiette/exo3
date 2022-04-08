@@ -10,7 +10,7 @@ abstract class BaseController {
 
     $method = strtolower($method) . ucfirst($action);
     if (!is_callable([$this, $method])) {
-      throw new \RuntimeException("L'action " . $method . "n'est pas définie");
+      throw new \RuntimeException(" L'action " . $method . " n'est pas définie ");
     }
 
     $this->$method($params);
@@ -35,6 +35,7 @@ abstract class BaseController {
 //    $header= new HTTPResponse();
 //    $header->addHeader('Content-Type: application/json');
     echo json_encode($content);
-    echo json_encode($_COOKIE);
+//    echo json_encode($_COOKIE);
+    exit();
   }
 }

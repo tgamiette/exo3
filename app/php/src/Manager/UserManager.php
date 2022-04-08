@@ -6,10 +6,12 @@ use App\Entity\User;
 
 class UserManager extends BaseManager {
 
-  public function add(User $user): bool {
-    $sql = "INSERT INTO `user` (`name`, `lastname`) VALUES (:name, :lastname);";
+  public function add(User $user) {
+    $sql = "INSERT INTO `user` (`name`,`password`, `jwt`) VALUES (:name,:password , :jwt);";
     $request = $this->db->prepare($sql);
-    $request->bindValue(':lastname', $user->getLastname());
+
+    $request->bindValue(':jwt', $user->getJwt());
+    $request->bindValue(':password', $user->getPassword());
     $request->bindValue(':name', $user->getName());
     return $request->execute();
   }
@@ -45,4 +47,25 @@ class UserManager extends BaseManager {
     }
     return $collect;
   }
+
+  public function checkConnexion(array $array) {
+    $sql = "SELECT  `jwt` FROM user  WHERE `name`=:name AND `password` = :password";
+    $request = $this->db->prepare($sql);
+
+    $request->bindValue(':name', $array['name'], \PDO::PARAM_STR);
+    $request->bindValue(':password', $array['password'], \PDO::PARAM_STR);
+
+    $request->execute();
+    return $request->fetch(\PDO::FETCH_ASSOC);
+  }
+
+  public function checkToken($jwt) {
+    $sql = "SELECT  * FROM user  WHERE `jwt`=:jwt";
+    $request = $this->db->prepare($sql);
+    $request->bindValue(':jwt', $jwt);
+    $request->execute();
+    return $request->fetch(\PDO::FETCH_ASSOC);
+
+  }
+
 }

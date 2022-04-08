@@ -9,6 +9,48 @@ class User extends BaseEntity {
   protected string $lastname;
   protected string $email;
   protected string $jwt;
+
+  /**
+   * @return string
+   */
+  public function getEmail(): string {
+    return $this->email;
+  }
+
+  /**
+   * @param string $email
+   */
+  public function setEmail(string $email): void {
+    $this->email = $email;
+  }
+
+  /**
+   * @return string
+   */
+  public function getJwt(): string {
+    return $this->jwt;
+  }
+
+  /**
+   * @param string $jwt
+   */
+  public function setJwt(string $jwt): void {
+    $this->jwt = $jwt;
+  }
+
+  /**
+   * @return string
+   */
+  public function getPassword(): string {
+    return $this->password;
+  }
+
+  /**
+   * @param string $password
+   */
+  public function setPassword(string $password): void {
+    $this->password = $password;
+  }
   protected string $password;
 
   public function __construct($arr) {
@@ -44,5 +86,6 @@ class User extends BaseEntity {
   public function setLastname(string $val) {
     $this->lastname = $val;
   }
+
 
 }

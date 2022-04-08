@@ -4,47 +4,57 @@ namespace App\Manager;
 
 use App\Entity\Post;
 
-class PostManager extends BaseManager
-{
-    /**
-     * @return Post[]
-     */
-    public function getAllPost():array
-    {
-        return [];
-    }
+class PostManager extends BaseManager {
+  /**
+   * @return Post[]
+   */
+  public function getAllPost(): array {
+    return [];
+  }
 
-    /**
-     * @return Post
-     */
-    public function getPostById(): Post{
+  /**
+   * @return Post
+   */
+  public function getPostById(): Post {
 
-        return new Post();
-    }
+    return new Post();
+  }
 
-    /**
-     * @param Post $post
-     * @return boolean|bool
-     */
-    public function createPost(Post $post){
+  /**
+   * @param Post $post
+   * @return boolean|bool
+   */
+  public function createPost(Post $post) {
 
-    }
+  }
 
-    /**
-     * @return bool
-     */
-    public function deletePostById():bool{
+  /**
+   * @return bool
+   */
+  public function deletePostById(): bool {
 
-        return true;
-    }
+    return true;
+  }
 
-    /**
-     * @param Post $post
-     * @return boolean|bool
-     */
-    public function updatePost(Post $post,){
-        //TODO - getPostById($post->getId)
-    }
+  /**
+   * @param Post $post
+   * @return boolean|bool
+   */
+  public function updatePost(Post $post,) {
+    //TODO - getPostById($post->getId)
+  }
 
+  public function addPost(Post $post) {
+    $sql = "INSERT INTO `comment` (`title`, `description`,`author_id`) VALUES (:title, :description, :author);";
+    $request = $this->db->prepare($sql);
+
+    $request->bindValue(':title', $post->getTitle());
+
+    $request->bindValue(':description', $post->getDescription());
+
+    $request->bindValue(':author', $post->getAuthorId(), \PDO::PARAM_INT);
+
+    return $request->execute();
+  }
 
 }

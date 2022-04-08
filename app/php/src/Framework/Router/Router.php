@@ -4,24 +4,23 @@ namespace App\Framework\Router;
 
 use App\Controller\ErrorController;
 
-class Router
-{
-  public function getController()
-  {
+class Router {
+  public function getController() {
     $xml = new \DOMDocument();
-    $xml->load(__DIR__.'/route.xml');
+    $xml->load(__DIR__ . '/route.xml');
 
     $routes = $xml->getElementsByTagName('route');
 
     if (isset($_GET['p'])) {
       $path = htmlspecialchars($_GET['p']);
-    } else {
+    }
+    else {
       $path = "/";
     }
 
     foreach ($routes as $route) {
       if ($path === $route->getAttribute('p')) {
-        $controllerClass = 'App\\Controller\\'.$route->getAttribute('controller');
+        $controllerClass = 'App\\Controller\\' . $route->getAttribute('controller');
         $action = $route->getAttribute('action');
         $params = [];
 
