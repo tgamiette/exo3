@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Manager\UserManager;
+
 abstract class BaseController {
   private $templateFile = __DIR__ . "/../Views/template.php";
   private $viewDIR = __DIR__ . "/../Views/Frontend/";
@@ -30,6 +32,14 @@ abstract class BaseController {
     exit;
   }
 
+  public function checkAccess() {
+    $userManager = new UserManager();
+    $user = $userManager->checkToken(getallheaders()['authorization']);
+    if ($user === false) {
+      $this->renderJSON("jwt Erroné");
+    }
+    return $user;
+  }
 
   public function renderJSON($content) {
 //    $header= new HTTPResponse();

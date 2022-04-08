@@ -57,4 +57,10 @@ class PostManager extends BaseManager {
     return $request->execute();
   }
 
+  public function findAll(): array {
+    $query = $this->db->query("SELECT * FROM comment");;
+    $comments = $query->fetchAll(\PDO::FETCH_ASSOC);
+    return $comments;
+  }
+
 }

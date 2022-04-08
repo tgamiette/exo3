@@ -23,11 +23,8 @@ export default function Post({cookies}: { cookies: Cookies }) {
             credentials: 'include'
         };
 
-        console.log(cookies.get('jwt'), raw, myHeaders, requestOptions)
-
-
         fetch(`http://localhost:1234/api/post/${cookies.get('jwt')}`, requestOptions)
-            .then(response => response.json())
+            .then(response => response.text())
             .then(result => {
                 console.log(result);
                 if (result.status === 200) {

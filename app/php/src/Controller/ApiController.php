@@ -5,23 +5,29 @@ namespace App\Controller;
 
 use App\Entity\Post;
 use App\Entity\User;
+use App\Manager\CommentManager;
 use App\Manager\PostManager;
 use App\Manager\UserManager;
 
 class ApiController extends BaseController {
 
-  public function getUser($params) {
-    $userManager = new UserManager();
+  public function getPost($params) {
+    $this->checkAccess();
     $id = (int)$params['id'];
-    var_dump($id);
-
+    $postManager = new PostManager();
     if ($id === 0) {
-      $posts = $userManager->findAll();
+      $posts = $postManager->findAll();
     }
     else {
-      $posts = $userManager->findById($id);
+      $posts = $postManager->findById($id);
     }
-    $this->renderJSON("test");
+
+    if ($posts) {
+      $this->renderJSON(['value' => $posts, 'status' => 200, 'message' => "Récupération Ok"]);
+    }
+    else {
+      $this->renderJSON(['status' => 200, 'message' => "Récupération KOO"]);
+    }
   }
 
   public function postUser($params) {
@@ -65,15 +71,17 @@ class ApiController extends BaseController {
 
 
   public function postPost($params) {
+//
+    $user= $this->checkAccess();
 
-    die();
-    $token = $params['id'];
-    $userManager = new UserManager();
-    $user = $userManager->checkToken($token);
-    if ($user === false) {
-      $this->renderJSON("KO");
-    }
-    else {
+//    var_dump(getallheaders()['authorization']);
+//    $token = getallheaders()['authorization'];
+//    $userManager = new UserManager();
+//    $user = $userManager->checkToken($token);
+//    if ($user === false) {
+//      $this->renderJSON("KO");
+//    }
+//    else {
       $user = new User($user);
       $postManager = new PostManager();
       $post = new Post($_POST);
@@ -95,7 +103,7 @@ class ApiController extends BaseController {
         ]);
       }
     }
-  }
+//  }
 //  public function putUser($params)
 //  {
 //    parse_str(file_get_contents("php://input"), $_PUT);
