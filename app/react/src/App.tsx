@@ -1,4 +1,4 @@
-import {Dispatch, useEffect, useState} from 'react'
+import react,{useEffect, useState} from 'react'
 import "bootstrap/dist/css/bootstrap.css"
 import './App.css'
 import Form from "./form";
@@ -7,12 +7,17 @@ import {CommentInterface} from "./Interface/Comment";
 import Post from "./Post";
 import Cookies from 'universal-cookie';
 
+interface CommentPropsInterface {
 
-function App() {
+    comments: CommentInterface[];
+
+}
+
+export default function App() {
     const cookies = new Cookies();
-    const [connected, setConnected] = useState(false)
-    let comments = []
-
+    const [connected, setConnected] = useState<boolean>(false)
+    const [comments, setComments] = useState([])
+    const [list, setList] = useState([])
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
     myHeaders.append("Access-Control-Request-Method", "GET");
@@ -24,17 +29,20 @@ function App() {
         credentials: 'include'
     };
 
-    fetch(`http://localhost:1234/api/comment/`, requestOptions)
-        .then(response => response.json())
-        .then(result => {
-            console.log(result);
-            if (result.status === 200) {
-                comments = result.result
-            } else {
-                console.log("ajout du commentaire Ko")
-            }
-        })
-        .catch(error => console.log('error', error));
+    useEffect(() => {
+        fetch(`http://localhost:1234/api/post/`, requestOptions)
+            .then(response => response.json())
+            .then(result => {
+                // console.log(result);
+                if (result.status == 200) {
+                    setList(result.value)
+                } else if (result.status && result.status !== 200) {
+                    console.log("Lecture des com ko")
+                }
+            })
+            .catch(error => console.log('error', error));
+
+    }, [])
 
     return (
         <div className="App">
@@ -42,26 +50,17 @@ function App() {
             {!connected && <Form/>}
             {connected && <Post cookies={cookies}/>}
 
-            <div>
-                <h1>Tout les commentaire</h1>
-                {postDB !== false ?
-                    postDB.map(comment => {
-                        return (
-                            <div>
-                                <h2>{comment.title}</h2>
-                                <p>Par: {comment.author}<br/>Le: {comment.date}</p>
-                                <p>{comment.comment}</p>
-                            </div>
-                        )
-                    })
-                    :
-                    null
-                }
-            </div>
-        </div>
-
-
-    )
+            <h1>Tout les commentaires</h1>
+            {
+                list.map((comment) => {
+                    return (
+                        <div key={comment.string}>
+                            <h2>{comment.title}</h2>
+                            <p>Par: {comment.author_id}<br/>Le: {}</p>
+                            <p>{comment.description}</p>
+                        </div>)
+                })
+            }
+        </div>)
 }
 
-export default App

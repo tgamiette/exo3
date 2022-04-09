@@ -23,14 +23,14 @@ export default function Post({cookies}: { cookies: Cookies }) {
             credentials: 'include'
         };
 
-        fetch(`http://localhost:1234/api/post/${cookies.get('jwt')}`, requestOptions)
+        fetch(`http://localhost:1234/api/post`, requestOptions)
             .then(response => response.text())
             .then(result => {
                 console.log(result);
                 if (result.status === 200) {
-                    console.log("ajout réussi")
+                    console.log("ajout du poste  Ok")
                 } else {
-                    console.log("ajout du commentaire Ko")
+                    console.log("ajout KO Ko")
                 }
             })
             .catch(error => console.log('error', error));
