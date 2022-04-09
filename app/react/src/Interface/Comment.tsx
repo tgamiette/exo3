@@ -1,5 +1,6 @@
 export interface CommentInterface {
-    author: string
-    comment: string
+    id : number
+    author_id: string
+    description: string
     title: string
 }

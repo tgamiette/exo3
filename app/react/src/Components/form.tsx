@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from "react";
-import {UserInterface} from "./Interface/User";
+import {UserInterface} from "../Interface/User";
 
 
 export default function Form() {
-    const [user, setUser] = useState<UserInterface>({lastname: "", name: "", password:""})
+    const [user, setUser] = useState<UserInterface>({ name: "", password:""})
 
     // @ts-ignore
     const handleSubmit = (e) => {
@@ -24,7 +24,7 @@ export default function Form() {
             // @ts-ignore
             fetch("http://localhost:1234/api/user/", requestOptions)
                 .then(response => response.text())
-                .then(result => {
+                .then((result:any) => {
                     if (result.status === 200) {
                         console.log("good")
                     } else {

@@ -1,35 +1,27 @@
 import React, {Dispatch, useEffect, useState} from "react";
-import {UserLoginInterface} from "./Interface/User";
+import {UserLoginInterface} from "../Interface/User";
 import Cookies from 'universal-cookie';
 import {useCookies} from "react-cookie";
+import useGetLoginFrom from "../Hook/useGetLoginFrom";
 
-export default function Login({cookies, setConnected}: { cookies: Cookies, setConnected: Dispatch<boolean> }) {
+export default function Login({setConnected}: { cookies: Cookies, setConnected: Dispatch<boolean> }) {
+    const cookies = new Cookies();
     // @ts-ignore
     const handleSubmit = (e) => {
-
         e.preventDefault()
         const myHeaders = new Headers();
-        myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
-        myHeaders.append("Access-Control-Request-Method", "POST");
-        const raw = new URLSearchParams({'name': e.target.name.value, 'password': e.target.password.value});
-        const requestOptions = {
-            method: 'POST',
-            headers: myHeaders,
-            body: raw,
-        };
-        fetch("http://localhost:1234/api/login/", requestOptions)
-            .then(response => response.json())
-            .then(result => {
+        const getLogin = useGetLoginFrom({setConnected: setConnected, event: e})
+        getLogin()
+            .then((result: any) => {
                 if (result.status === 200) {
                     console.log("connexion ok")
-                    document.cookie = `jwt=${result.jwt}`
                     cookies.set('jwt', result.jwt)
                     setConnected(true)
                 } else {
-                    console.log("pas Good")
+                    console.log("connexion Ko")
                 }
             })
-            .catch(error => console.log('error', error));
+            .catch((error:any) => console.log('error', error));
     }
 
 
