@@ -72,37 +72,28 @@ class ApiController extends BaseController {
 
   public function postPost($params) {
 //
-    $user= $this->checkAccess();
-
-//    var_dump(getallheaders()['authorization']);
-//    $token = getallheaders()['authorization'];
-//    $userManager = new UserManager();
-//    $user = $userManager->checkToken($token);
-//    if ($user === false) {
-//      $this->renderJSON("KO");
-//    }
-//    else {
-      $user = new User($user);
-      $postManager = new PostManager();
-      $post = new Post($_POST);
-      $post->setAuthorId($user->getId());
+    $user = $this->checkAccess();
+    $user = new User($user);
+    $postManager = new PostManager();
+    $post = new Post($_POST);
+    $post->setAuthorId($user->getId());
 
 
-      if ($postManager->addPost($post)) {
-        header("connexion Ok", true, 200);
-        $this->renderJSON([
-          'status' => 200,
-          'message' => "ajout ok "
-        ]);
-      }
-      else {
-        header("connexion ko ", true, 400);
-        $this->renderJSON([
-          'status' => 400,
-          'message' => "Ajout Ko"
-        ]);
-      }
+    if ($postManager->addPost($post)) {
+      header("connexion Ok", true, 200);
+      $this->renderJSON([
+        'status' => 200,
+        'message' => "ajout ok "
+      ]);
     }
+    else {
+      header("connexion ko ", true, 400);
+      $this->renderJSON([
+        'status' => 400,
+        'message' => "Ajout Ko"
+      ]);
+    }
+  }
 //  }
 //  public function putUser($params)
 //  {

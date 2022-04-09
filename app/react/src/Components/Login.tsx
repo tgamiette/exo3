@@ -4,7 +4,7 @@ import Cookies from 'universal-cookie';
 import {useCookies} from "react-cookie";
 import useGetLoginFrom from "../Hook/useGetLoginFrom";
 
-export default function Login({setConnected}: { cookies: Cookies, setConnected: Dispatch<boolean> }) {
+export default function Login({setConnected}: { setConnected: Dispatch<boolean> }) {
     const cookies = new Cookies();
     // @ts-ignore
     const handleSubmit = (e) => {
@@ -21,7 +21,7 @@ export default function Login({setConnected}: { cookies: Cookies, setConnected: 
                     console.log("connexion Ko")
                 }
             })
-            .catch((error:any) => console.log('error', error));
+            .catch((error: any) => console.log('error', error));
     }
 
 

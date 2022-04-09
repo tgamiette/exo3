@@ -1,13 +1,13 @@
 import Cookies from "universal-cookie";
 
-export default function usePostPosteFrom({event}:{event:Event}): Function {
+export default function usePostPosteFrom({event}: { event: Event }): Function {
 
     const myHeaders = new Headers();
     const cookies = new Cookies()
-console.log(event.target.title.value)
     myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
-    myHeaders.append("Access-Control-Request-Method", "GET");
+    myHeaders.append("Access-Control-Request-Method", "POST");
     myHeaders.append('Authorization', cookies.get('jwt'));
+    // @ts-ignore
     const raw = new URLSearchParams({title: event.target?.title.value, description: event.target?.description.value});
     // @ts-ignore
     const requestOptions = {

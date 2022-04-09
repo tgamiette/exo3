@@ -34,7 +34,8 @@ abstract class BaseController {
 
   public function checkAccess() {
     $userManager = new UserManager();
-    $user = $userManager->checkToken(getallheaders()['authorization']);
+//    var_dump(getallheaders());die();
+    $user = $userManager->checkToken(getallheaders()['Authorization']);
     if ($user === false) {
       $this->renderJSON("jwt Erroné");
     }

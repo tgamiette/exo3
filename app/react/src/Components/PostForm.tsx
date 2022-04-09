@@ -1,13 +1,15 @@
-import React from "react";
+import React, {Dispatch} from "react";
 import usePostPostFrom from "../Hook/usePostPostFrom";
+import {CommentInterface} from "../Interface/Comment";
 
 
-export default function PostForm() {
+export default function PostForm({setComments}: { setComments: Dispatch<CommentInterface> }) {
 
     // @ts-ignore
     const handleSubmit = (e) => {
         e.preventDefault()
-        const PostPost = usePostPostFrom({event:e})
+        const PostPost = usePostPostFrom({event: e})
+        setComments({description: e.target.description.value, title: e.target.title.value})
 
         PostPost(e)
             .then((result: any) => {
@@ -18,6 +20,8 @@ export default function PostForm() {
                 }
             })
             .catch((error: any) => console.log('error', error));
+        e.target.description.value =''
+        e.target.title.value =''
     }
     return (
         <form onSubmit={handleSubmit}>

@@ -4,13 +4,11 @@ import {UserInterface} from "../Interface/User";
 
 export default function Form() {
     const [user, setUser] = useState<UserInterface>({ name: "", password:""})
-
     // @ts-ignore
     const handleSubmit = (e) => {
         e.preventDefault()
         setUser({password: e.target.password.value, name: e.target.name.value})
     }
-
     useEffect(() => {
             const myHeaders = new Headers();
             myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
@@ -21,6 +19,7 @@ export default function Form() {
                 headers: myHeaders,
                 body: raw,
             };
+
             // @ts-ignore
             fetch("http://localhost:1234/api/user/", requestOptions)
                 .then(response => response.text())
