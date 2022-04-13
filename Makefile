@@ -11,12 +11,7 @@ install:
 
 
 bash:
-		docker-compose exec apache bash
+		docker-compose exec exo3_apache_1 bash
 
 stop:
 		docker-compose stop
-
-deploy:
-		sh bin/deploy.sh
-
-restart: stop up
