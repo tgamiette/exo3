@@ -1,3 +1,7 @@
 # exo3
+`git clone https://github.com/tgamiette/exo3.git`
 
-Make install
+`cd exo3`
+
+`make install`
+
