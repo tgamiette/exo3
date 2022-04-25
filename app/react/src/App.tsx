@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react'
-import "bootstrap/dist/css/bootstrap.css"
-import './App.css'
+// import "bootstrap/dist/css/bootstrap.css"
+import './App.scss'
 import Form from "./Components/form";
 import Login from "./Components/Login";
 import PostForm from "./Components/PostForm";
@@ -46,6 +46,11 @@ export default function App() {
                         </div>)
                 })
             }
+            <div className={"container-t"}>
+                <div className={"circle"}>
+                    <h1 className={"text"} id={"welcome"}>bienvenue</h1>
+                </div>
+            </div>
         </div>)
 }
 

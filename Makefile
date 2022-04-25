@@ -1,5 +1,5 @@
 up:
-		docker-compose up -d
+		docker-compose up -d && npm start
 
 ps:
 		docker-compose ps
@@ -7,7 +7,7 @@ ps:
 install:
 		docker-compose up -d --build
 		docker exec -i exo3_db_1 mysql -uroot -pazerty mysql < docker/bdd/dump/skeleton.sql
-		cd react && npm install && npm start
+		cd app/react && npm install && npm run dev
 
 
 bash:
