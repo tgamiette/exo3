@@ -11,5 +11,7 @@
             "email": "tgamiette@kernix.com"
         }
     ],
-    "require": {}
+    "require": {
+        "firebase/php-jwt": "^6.1"
+    }
 }

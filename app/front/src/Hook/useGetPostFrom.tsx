@@ -1,4 +1,5 @@
 import Cookies from "universal-cookie";
+import API from "./axios";
 
 export default function useGetPostFrom(): Function {
 
@@ -15,9 +16,18 @@ export default function useGetPostFrom(): Function {
         credentials: 'include'
     };
 
-    return (): Promise<any> => {
-        const url = `http://localhost:1234/api/post/`
-        return fetch(url, requestOptions)
-            .then(res => res.json())
+    // return (): Promise<any> => {
+    //     const url = `http://localhost:1234/api/post/`
+    //     return fetch(url, requestOptions)
+    //         .then(res => res.json())
+    // }
+
+    return(): Promise<any>=>{
+        return API.post('post')
+            .then(response => {
+                    console.log(response.data);
+                    return response.data
+                }
+            );
     }
 }

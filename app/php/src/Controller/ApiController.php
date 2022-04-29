@@ -5,95 +5,130 @@ namespace App\Controller;
 
 use App\Entity\Post;
 use App\Entity\User;
-use App\Manager\CommentManager;
 use App\Manager\PostManager;
 use App\Manager\UserManager;
+use App\Service\jwtHelper;
+use Firebase\JWT\JWK;
+use Firebase\JWT\JWT;
 
 class ApiController extends BaseController {
+//Récuperation d'un post
+	public function getPost($params) {
+		$id = (int)$params['id'];
+		$postManager = new PostManager();
+		if ($id === 0) {
+			$posts = $postManager->findAll();
+		}
+		else {
+			$posts = $postManager->findById($id);
+		}
+		
+		if ($posts) {
+			$this->renderJSON(['value' => $posts, 'status' => 200, 'message' => "Récupération Ok"]);
+		}
+		else {
+			$this->renderJSON(['status' => 200, 'message' => "Récupération KOO"]);
+		}
+	}
+	
+	public function getUser($params) {
+		$this->checkAccess();
+		$id = (int)$params['id'];
+		$postManager = new PostManager();
+		if ($id == 0) {
+			$posts = $postManager->findAll();
+		}
+		else {
+			$posts = $postManager->findById($id);
+		}
+		
+		if ($posts) {
+			$this->renderJSON(['value' => $posts, 'status' => 200, 'message' => "Récupération Ok"]);
+		}
+		else {
+			$this->renderJSON(['status' => 200, 'message' => "Récupération KOO"]);
+		}
+	}
 
-  public function getPost($params) {
-    $this->checkAccess();
-    $id = (int)$params['id'];
-    $postManager = new PostManager();
-    if ($id === 0) {
-      $posts = $postManager->findAll();
-    }
-    else {
-      $posts = $postManager->findById($id);
-    }
+//Inscription
+	public function postUser($params) {
+		if (isset($_POST['name']) && isset($_POST['password'])) {
+			$user = new User($_POST);
+			$user->setJwt(base_convert(hash('sha256', time() . mt_rand()), 16, 36));
+			$userManager = new UserManager();
+			$result = $userManager->add($user);
+			
+			if ($result) {
+				$this->renderJSON(["message" => 'ajoute réussi', 'status' => 200]);
+			}
+			else {
+				throw new \HttpException("Problème lors de l'ajout de la requête");
+				$this->renderJSON(["message" => "Problème lors de l'ajout", "status" => 400]);
+			}
+		}
+		else {
+			$this->renderJSON(["message" => 'il manque des popriété', "status" => 400]);
+		}
+	}
 
-    if ($posts) {
-      $this->renderJSON(['value' => $posts, 'status' => 200, 'message' => "Récupération Ok"]);
-    }
-    else {
-      $this->renderJSON(['status' => 200, 'message' => "Récupération KOO"]);
-    }
-  }
+//	connexion (retour du token)
+	public function postLogin($params) {
+		$userManager = new UserManager();
+		$user = $userManager->checkLogin($_POST);
+		if ($user) {
+			$user = new User($user);
+			$token = (new jwtHelper())->generate($user);
+			$_COOKIE['token'] = $token;
+			$this->renderJSON([
+				'status' => 200,
+				'token' => $token,
+				'message' => "connexion ok "
+			]);
+		}
+		else {
+			$this->renderJSON([
+				'status' => 403,
+				'message' => "connexion echoué"
+			], 403);
+		}
+	}
 
-  public function postUser($params) {
-    if (isset($_POST['name']) && isset($_POST['password'])) {
-      $user = new User($_POST);
-      $user->setJwt(base_convert(hash('sha256', time() . mt_rand()), 16, 36));
-      $userManager = new UserManager();
-      $result = $userManager->add($user);
+//	//	raffraichissement du token  (retour du token)
+	public function postRefresh($params) {
+		$token = $_POST['token'];
+		$jwtHelper = new jwtHelper();
+		$payload = $jwtHelper->payloads($token);
+		$payload->exp = $payload->exp + jwtHelper::CONTS_TIME_REFRESH;
+		$jwt = $jwtHelper->encode((array)$payload);
+		$_COOKIE['token'] = $jwt;
+		$this->renderJSON($jwt);
+	}
 
-      if ($result) {
-        $this->renderJSON(["message" => 'ajoute réussi', 'status' => 200]);
-      }
-      else {
-        throw new \HttpException("Problème lors de l'ajout de la requête");
-        $this->renderJSON(["message" => "Problème lors de l'ajout", "status" => 400]);
-      }
-    }
-    else {
-      $this->renderJSON(["message" => 'il manque des popriété', "status" => 400]);
-    }
-  }
-
-  public function postLogin($params) {
-    $userManager = new UserManager();
-    $jwt = $userManager->checkConnexion($_POST);
-    if ($jwt) {
-      $this->renderJSON([
-        "jwt" => $jwt['jwt'],
-        'status' => 200,
-        'message' => "connexion ok "
-      ]);
-    }
-    else {
-      header("connexion ko ", true, 200);
-      $this->renderJSON([
-        'status' => 400,
-        'message' => "connexion Ko "
-      ]);
-    }
-  }
-
-
-  public function postPost($params) {
-//
-    $user = $this->checkAccess();
-    $user = new User($user);
-    $postManager = new PostManager();
-    $post = new Post($_POST);
-    $post->setAuthorId($user->getId());
-
-
-    if ($postManager->addPost($post)) {
-      header("connexion Ok", true, 200);
-      $this->renderJSON([
-        'status' => 200,
-        'message' => "ajout ok "
-      ]);
-    }
-    else {
-      header("connexion ko ", true, 400);
-      $this->renderJSON([
-        'status' => 400,
-        'message' => "Ajout Ko"
-      ]);
-    }
-  }
+//Envoyer un post
+	public function postPost($params) {
+		if (isset($_COOKIE['token'])) {
+			$token = $_COOKIE['token'];
+			$user = $this->checkAccess($token);
+			$postManager = new PostManager();
+			$post = new Post($_POST);
+			$post->setAuthorId($user->getId());
+			
+			if ($postManager->addPost($post)) {
+				header("connexion Ok", true, 200);
+				$this->renderJSON([
+					'status' => 200,
+					'message' => "ajout ok "
+				]);
+			}
+			else {
+				header("connexion ko ", true, 400);
+				$this->renderJSON([
+					'status' => 402,
+					'message' => "Ajout Ko"
+				], 403);
+			}
+		}
+	}
 //  }
 //  public function putUser($params)
 //  {

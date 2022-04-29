@@ -7,12 +7,13 @@ use App\Entity\User;
 class UserManager extends BaseManager {
 
   public function add(User $user) {
-    $sql = "INSERT INTO `user` (`name`,`password`, `jwt`) VALUES (:name,:password , :jwt);";
+    $sql = "INSERT INTO `user` (`name`,`password`, `lastname`,`phone`) VALUES (:name,:password , :lastname , :phone);";
     $request = $this->db->prepare($sql);
 
-    $request->bindValue(':jwt', $user->getJwt());
+    $request->bindValue(':lastname', $user->getName());
     $request->bindValue(':password', $user->getPassword());
     $request->bindValue(':name', $user->getName());
+    $request->bindValue(':phone', 000000000);
     return $request->execute();
   }
 
@@ -23,7 +24,7 @@ class UserManager extends BaseManager {
   }
 
   public function set(User $user): bool {
-    $sql = "UPDATE `user`   
+    $sql = "UPDATE `user`
                         SET `name`=`:name`, `lastname`=`:lastname` 
                         WHERE `id`=:id";
     $request = $this->db->prepare($sql);
@@ -48,24 +49,36 @@ class UserManager extends BaseManager {
     return $collect;
   }
 
-  public function checkConnexion(array $array) {
-    $sql = "SELECT  `jwt` FROM user  WHERE `name`=:name AND `password` = :password";
+  public function checkLogin(array $array) {
+    $sql = "SELECT  * FROM user  WHERE `name`=:name AND `password` = :password";
     $request = $this->db->prepare($sql);
 
     $request->bindValue(':name', $array['name'], \PDO::PARAM_STR);
     $request->bindValue(':password', $array['password'], \PDO::PARAM_STR);
-
+	
     $request->execute();
+		
+//    var_dump($request->fetch(\PDO::FETCH_ASSOC));die();
     return $request->fetch(\PDO::FETCH_ASSOC);
   }
 
   public function checkToken($jwt) {
-    $sql = "SELECT  * FROM user  WHERE `jwt`=:jwt";
+    $sql = "SELECT  * FROM user  WHERE `jwt`=:jwt LIMIT 1";
     $request = $this->db->prepare($sql);
     $request->bindValue(':jwt', $jwt);
     $request->execute();
     return $request->fetch(\PDO::FETCH_ASSOC);
 
   }
-
+	
+	
+	public function findById($idUser) {
+		$sql = "SELECT  * FROM user  WHERE `id`= :id";
+		$request = $this->db->prepare($sql);
+		
+		$request->bindValue(':id', $idUser, \PDO::PARAM_INT);
+		$request->execute();
+		return $request->fetch(\PDO::FETCH_ASSOC);
+	}
+	
 }

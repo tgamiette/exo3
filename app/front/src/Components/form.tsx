@@ -1,39 +1,30 @@
 import React, {useEffect, useState} from "react";
 import {UserInterface} from "../Interface/User";
+import usePostUserFrom from "../Hook/usePostUserFrom";
+import useGetPostFrom from "../Hook/useGetPostFrom";
 
 
 export default function Form() {
-    const [user, setUser] = useState<UserInterface>({ name: "", password:""})
+    const [user, setUser] = useState<UserInterface>({name: "", password: ""})
     // @ts-ignore
     const handleSubmit = (e) => {
         e.preventDefault()
         setUser({password: e.target.password.value, name: e.target.name.value})
+        console.log(user)
+        const PostUser = usePostUserFrom(user)
+
+        // @ts-ignore
+        PostUser()
+            .then((result: any) => {
+                console.log(result)
+                if (result.status === 200) {
+                    console.log("good")
+                } else {
+                    console.log("pas Good")
+                }
+            })
+            .catch((error: any) => console.log('error', error));
     }
-    useEffect(() => {
-            const myHeaders = new Headers();
-            myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
-            myHeaders.append("Access-Control-Request-Method", "POST");
-            const raw = new URLSearchParams({'name': user.name, 'password': user.password});
-            const requestOptions = {
-                method: 'POST',
-                headers: myHeaders,
-                body: raw,
-            };
-
-            // @ts-ignore
-            fetch("http://localhost:1234/api/user/", requestOptions)
-                .then(response => response.text())
-                .then((result:any) => {
-                    if (result.status === 200) {
-                        console.log("good")
-                    } else {
-                        console.log("pas Good")
-                    }
-                })
-                .catch(error => console.log('error', error));
-        }
-        , [user])
-
     return (
         <div className="form-body">
             <form onSubmit={handleSubmit}>
