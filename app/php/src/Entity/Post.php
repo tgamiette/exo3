@@ -6,7 +6,7 @@ class Post extends BaseEntity {
   private int $id;
 //    private \DateTime $date;
   private string $title;
-  private string $description;
+  private string $content;
   private int $authorId;
 
   public function __construct($arr) {
@@ -44,14 +44,14 @@ class Post extends BaseEntity {
   /**
    * @return string
    */
-  public function getDescription(): string {
+  public function getContent(): string {
     return $this->description;
   }
 
   /**
    * @param string $description
    */
-  public function setDescription(string $description): void {
+  public function setContent (string $description): void {
     $this->description = $description;
   }
 

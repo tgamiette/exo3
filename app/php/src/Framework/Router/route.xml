@@ -22,6 +22,7 @@
   <route p="api/user" controller="ApiController" action="user" params="id"/>
   <route p="api/login" controller="ApiController" action="login" params="id"/>
   <route p="api/post" controller="ApiController" action="Post" params="id"/>
+  <route p="api/refresh" controller="ApiController" action="Refresh" params="id"/>
   <!--    <route p="api/post" controller="ApiController" action="updatePost" methode="post" params="id"/>-->
   <!--    <route p="api/post" controller="ApiController" action="Post" methode="get"/>-->
 
